@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	Version    = "0.1"
+	Version    = "0.2"
 	minversion string
 	l          *log.Logger
 	quitSig    = make(chan int)
