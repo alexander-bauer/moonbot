@@ -10,6 +10,7 @@ var (
 	Version    = "0.1"
 	minversion string
 	l          *log.Logger
+	quitSig    = make(chan int)
 
 	ConfigFile string
 )
@@ -22,11 +23,15 @@ func main() {
 	l = log.New(os.Stdout, "", log.Ltime)
 	l.Println("MoonBot version:", Version+minversion)
 
-	_, err := NewBot("#moonbot", os.Args[1], os.Args[2])
+	bot, err := NewBot(os.Args[1], os.Args[2], "#moonbot")
 	if err != nil {
 		l.Fatalln("Could not create bot:", err)
 	}
 	l.Println("Bot created.") //This should list channels.
 
-	l.Println("Successful.")
+	l.Println("Saying hello.")
+	bot.Say("#moonbot", "Hello.")
+
+	status := <-quitSig
+	os.Exit(status)
 }
