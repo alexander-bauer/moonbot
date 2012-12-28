@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "encoding/json"
-	_ "github.com/zeebo/irc"
 	"log"
 	"os"
 )
@@ -10,6 +9,7 @@ import (
 var (
 	Version    = "0.1"
 	minversion string
+	l          *log.Logger
 
 	ConfigFile string
 )
@@ -18,13 +18,15 @@ const (
 	defaultConfigFile = "moonbot.conf"
 )
 
-type MoonBot struct {
-	l *log.Logger
-}
-
 func main() {
-	bot := &MoonBot{
-		l: log.New(os.Stdout, "moonbot:", log.Ltime),
+	l = log.New(os.Stdout, "", log.Ltime)
+	l.Println("MoonBot version:", Version+minversion)
+
+	_, err := NewBot("#moonbot", os.Args[1], os.Args[2])
+	if err != nil {
+		l.Fatalln("Could not create bot:", err)
 	}
-	bot.l.Println("MoonBot version:", Version+minversion)
+	l.Println("Bot created.") //This should list channels.
+
+	l.Println("Successful.")
 }
