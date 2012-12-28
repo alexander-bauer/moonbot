@@ -32,22 +32,27 @@ func NewBot(server, password string, logger *log.Logger, channels ...string) (bo
 	go func(b *MoonBot) {
 		for msg := range bot.Conn.Read {
 			command := strings.SplitN(msg.Trailing, " ", 3)
+			//TODO: This should check to make sure it's a PRIVMSG
 			if len(command) >= 2 && command[0] == Nick+":" {
 				var args string
-				channel := "#moonbot"
+				var channel string
 				if len(command) >= 3 {
 					args = command[2]
 				}
+				if len(msg.Params) > 0 {
+					channel = msg.Params[0]
+				}
+
 				switch strings.ToLower(command[1]) {
 				case "version":
-					b.Say("#moonbot", "Version "+Version+minversion)
+					b.Say(channel, "Version "+Version+minversion)
 
 				case "quit":
 					b.l.Println("Quitting")
 					b.Quit()
 
 				case "echo":
-					b.l.Println("Echoing", args)
+					b.l.Println(channel+": echo ", args)
 					b.Say(channel, args)
 				}
 			}
