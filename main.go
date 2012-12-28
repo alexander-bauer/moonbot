@@ -23,7 +23,7 @@ func main() {
 	l = log.New(os.Stdout, "", log.Ltime)
 	l.Println("MoonBot version:", Version+minversion)
 
-	bot, err := NewBot(os.Args[1], os.Args[2], "#moonbot")
+	bot, err := NewBot(os.Args[1], os.Args[2], l, "#moonbot")
 	if err != nil {
 		l.Fatalln("Could not create bot:", err)
 	}
